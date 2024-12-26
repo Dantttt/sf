@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>trencherAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Define Sf-Pro font */
+        @font-face {
+            font-family: 'Sf-Pro';
+            src: url('SF-Pro.ttf') format('truetype'); /* Assuming SF-Pro.ttf is the regular version */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Sf-Pro';
+            src: url('SF-Pro-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Sf-Pro';
+            src: url('SF-Pro-Semibold.ttf') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+        }
+        /* Global Styles */
+        body {
+            font-family: 'Sf-Pro', sans-serif;
+            margin: 0;
+            background-color: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            background-image: url('bg1.png'), url('bg2.png');
+            background-size: cover, cover;
+            background-position: center center, center center;
+            background-repeat: no-repeat, no-repeat;
+            background-attachment: fixed, fixed;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease, opacity 0.2s ease;
+        }
+
+        a:hover {
+            color: #ddd;
+            opacity: 0.9;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            position: relative;
+            padding-bottom: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px;
+            background-color: rgba(10, 10, 10, 0.8);
+        }
+
+        .section:first-child{
+            border:none;
+            padding-bottom: 0px;
+            background-color: transparent;
+        }
+
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            position: relative;
+            text-align: center;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            color: white;
+            font-family: 'Sf-Pro', sans-serif;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: white;
+            color: #0a0a0a;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: 'Sf-Pro', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            z-index: -1;
+            border-radius: 50px;
+            animation: glow 5s linear infinite;
+            opacity: 1;
+        }
+
+        @keyframes glow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.3);
+            text-shadow: none;
+        }
+
+        .small-text {
+            color: #b0bec5;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Sf-Pro', sans-serif;
+            margin-bottom: 5px;
+        }
+
+        .feature p, .trench-item p, #about-dai p, .step p {
+            color: #b0bec5;
+            font-size: 16px; /* Increased font size */
+            line-height: 1.8; /* Increased line height for better readability */
+            font-family: 'Sf-Pro', sans-serif;
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            overflow: hidden;
+            padding: 50px 0;
+            background-image: url('hero.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            border-radius: 0;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 10, 0.5);
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 0;
+        }
+
+        #hero .container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            justify-content: flex-start;
+            gap: 50px;
+        }
+
+        #hero-content {
+            opacity: 1;
+            transform: translateY(0);
+            flex: 1;
+        }
+
+        @keyframes fadeInSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #hero h1 {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            font-family: 'Sf-Pro', sans-serif;
+            color: white;
+        }
+
+        #hero p {
+            font-size: 24px;
+            color: #b0bec5;
+            margin-bottom: 30px;
+            line-height: 1.7;
+            font-family: 'Sf-Pro', sans-serif;
+        }
+
+        .hero-buttons button {
+            margin-right: 15px;
+        }
+
+        .hero-buttons button:last-child {
+            margin-right: 0;
+        }
+
+        #trenches-index-hero {
+            text-align: left;
+            opacity: 1;
+            transform: translateY(0);
+            padding-left: 0;
+            flex: 0 0 auto;
+        }
+
+        #trenches-index-hero h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Sf-Pro', sans-serif;
+            color: white;
+            font-weight: bold;
+        }
+
+        #trenches-index-hero h2 a {
+            margin-left: 10px;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+            font-size: 16px;
+        }
+
+        #trenches-index-hero h2 a:hover {
+            opacity: 1;
+        }
+
+        .progress-bar-container {
+            background-color: #333;
+            border-radius: 12px;
+            height: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 12px;
+            background-color: #fff;
+            width: 0;
+            animation: fillProgressBar 1.5s ease-out forwards 0.9s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0a0a0a;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid #fff;
+            transition: width 0.5s ease, background-color 0.3s ease;
+            box-shadow: 0 0 2px white;
+        }
+
+        @keyframes fillProgressBar {
+            to {
+                width: 75%;
+            }
+        }
+
+        .progress-bar:hover {
+            background-color: #eee;
+        }
+
+        .progress-meta {
+            margin-top: 20px;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+            font-family: 'Sf-Pro', sans-serif;
+        }
+        .progress-meta span {
+            color: white;
+        }
+
+           /* State of the Trenches Index Section */
+         #state-of-trenches-explained-section {
+             height: auto;
+              display: flex;
+            align-items: center;
+            background-color: transparent;
+            overflow: hidden;
+               background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px;
+            padding: 40px; /* Added padding back and increased */
+            margin-bottom: 80px; /* Added margin to create space */
+        }
+
+         #state-of-trenches-explained-section::before {
+           content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 10, 0.5);
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 15px;
+            opacity: 0; /* Hide the overlay */
+        }
+
+        #state-of-trenches-explained-section .container{
+               position: relative;
+                z-index: 2;
+            }
+
+        /* Key Features */
+        #key-features {
+            margin-top: 0px;
+            padding-top: 80px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            opacity: 1;
+            transform: translateY(0);
+            border-radius: 15px;
+        }
+
+        #key-features-title{
+            grid-column: 1 / -1;
+            justify-self: center;
+            margin-bottom: 40px;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature {
+            background-color: rgba(4, 4, 4, 0.5);
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 8px rgba(255, 255, 255, 0.4);
+            background-color: rgba(4, 4, 4, 0.7);
+        }
+
+        .feature h3 {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 0.4px;
+            color:white;
+               font-family: 'Sf-Pro', sans-serif;
+        }
+
+        /* State of the Trenches */
+        #state-of-trenches {
+            padding-top: 80px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 80px;
+             border-radius: 15px;
+        }
+
+        #state-of-trenches-title{
+            grid-column: 1 / -1;
+            justify-self: center;
+            margin-bottom: 40px;
+        }
+
+        .trench-item {
+            background-color: rgba(4, 4, 4, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align items to the start */
+            align-items: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trench-item:nth-child(1) {
+        border-radius: 15px;
+        }
+        .trench-item:nth-child(2) {
+            border-radius: 15px;
+        }
+        .trench-item:nth-child(3) {
+            border-radius:  15px ;
+            grid-row: span 2; /* Make Pumps/Dumps box fill the space */
+        }
+        .trench-item:nth-child(4) {
+            border-radius: 15px ;
+        }
+        .trench-item:nth-child(5) {
+            border-radius:  15px ;
+        }
+        .trench-item:nth-child(6) {
+            border-radius:  15px ;
+        }
+
+        .trench-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 8px rgba(255, 255, 255, 0.4);
+            background-color: rgba(4, 4, 4, 0.7);
+        }
+
+        .trench-item h4 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            color:white;
+               font-family: 'Sf-Pro', sans-serif;
+        }
+
+        .trench-item strong {
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+
+        /* About $DAI */
+        #about-dai {
+            border-radius: 15px;
+            padding: 40px 30px;
+            line-height: 2;
+            font-size: 18px;
+            letter-spacing: 0.3px;
+            position: relative;
+            background-color: rgba(4, 4, 4, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #about-dai p {
+            color: #b0bec5;
+            margin-bottom: 20px;
+        }
+
+        #about-dai p:first-of-type {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #about-dai p:last-child {
+            margin-bottom: 0;
+        }
+
+        #about-dai strong {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            background-color: #0a0a0a;
+            color: #78909c;
+            font-size: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 1;
+            transform: translateY(0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('bg2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-line {
+            height: 24px;
+            width: 1px;
+            background-color: #78909c;
+        }
+
+        footer a {
+            color: #78909c;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #99a9b5;
+        }
+
+        .social-links {
+              display: flex;
+               gap: 10px;
+        }
+
+        .social-links button {
+            margin: 0 5px;
+            font-size: 20px;
+            filter: grayscale(1);
+            background-color: transparent;
+            border:none;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            #hero {
+                height: auto;
+                padding: 80px 0;
+            }
+
+            #hero .container {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+            }
+
+            #hero-content {
+                margin-bottom: 40px;
+            }
+
+            #hero h1 {
+                font-size: 40px;
+            }
+
+            #hero p {
+                font-size: 18px;
+            }
+
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .hero-buttons button {
+                margin: 10px 0;
+            }
+
+            #trenches-index-hero {
+                padding-left: 0;
+                text-align: center;
+            }
+
+            #key-features {
+                grid-template-columns: 1fr;
+            }
+
+            #state-of-trenches {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 40px;
+            }
+
+            #about-dai {
+                padding: 40px;
+            }
+
+            #state-of-trenches-title{
+                margin-bottom: 0px;
+            }
+
+            #key-features-title{
+                margin-bottom: 40px;
+            }
+             #state-of-trenches-explained-section {
+                height: auto;
+                 padding: 40px 0;
+             }
+
+             .kols-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+             }
+             .kols-header > div:first-child {
+                margin-right: 0;
+                margin-bottom: 20px;
+             }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #state-of-trenches-explained {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            background-color: transparent; /* Removed background */
+            box-shadow: none; /* Removed box-shadow */
+            border: none; /* Removed border */
+            border-radius: 15px;
+            padding: 0; /* Removed padding */
+        }
+
+        .step {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: white;
+            font-family: 'Sf-Pro', sans-serif;
+        }
+
+        .step.last {
+            display: none; /* Removed the trencherAII in Action box */
+        }
+
+        .step.last .progress-bar-container {
+            width: 80%;
+            max-width: 500px;
+            margin-bottom: 15px;
+        }
+
+        .step.last .progress-meta {
+            margin-bottom: 0;
+        }
+
+        .kols-section {
+            padding-top: 80px; /* Added padding to align with other sections */
+        }
+
+        .kols-section .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .kols-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to the start for better text alignment */
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .kols-header > div:first-child {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        .kols-description {
+            font-size: 16px; /* Increased font size */
+            color: #b0bec5;
+            font-weight: normal;
+            font-family: 'Sf-Pro', sans-serif;
+            margin-top: 10px; /* Added more margin */
+            line-height: 1.7; /* Increased line height */
+        }
+
+        .kols-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 35px); /* Increased column width */
+            gap: 10px;
+            justify-content: start;
+            align-items: center;
+            margin-top: 20px; /* Added margin to separate from description */
+        }
+
+        .kol-circle {
+             width: 35px; /* Increased size */
+            height: 35px; /* Increased size */
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease, transform 0.2s ease,  box-shadow 0.3s ease,
+        }
+
+        .kol-circle.red {
+             background-color: #ff6b6b;
+              box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+            animation: glowRed 2s ease-in-out infinite alternate;
+         }
+
+         .kol-circle.green {
+            background-color: #32CD32;
+            box-shadow: 0 0 10px rgba(50, 205, 50, 0.8);
+            animation: glowGreen 2s ease-in-out infinite alternate;
+        }
+
+         @keyframes glowRed {
+            from { box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);}
+             to {  box-shadow: 0 0 20px rgba(255, 107, 107, 1);}
+          }
+
+         @keyframes glowGreen {
+             from {  box-shadow: 0 0 10px rgba(50, 205, 50, 0.8);}
+             to {   box-shadow: 0 0 20px rgba(50, 205, 50, 1);}
+        }
+
+        .kol-circle:hover {
+             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+              transform: scale(1.1);
+        }
+
+        .kols-status {
+            font-size: 16px; /* Increased font size */
+            color: #b0bec5;
+             margin-top: 20px;
+             font-weight: bold;
+             font-family: 'Sf-Pro', sans-serif;
+             text-align: center;
+        }
+
+        .social-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 10px;
+            background-color: #78909c;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+        }
+
+        .social-btn:hover {
+            background-color: #99a9b5;
+            transform: translateY(-2px);
+        }
+
+        .social-btn i {
+            font-size: 24px;
+            color: #0a0a0a;
+        }
+
+        /* Fix Pumps/Dumps size */
+        #state-of-trenches .trench-item:nth-child(3) {
+            grid-row: span 2; /* Allow it to take the necessary space */
+            align-items: start; /* Align content to the top */
+        }
+
+        /* Expand Cutting-Edge box */
+        #key-features .feature:nth-child(1) {
+            grid-row: span 2; /* Make it span two rows */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.progress-bar');
+            const targetWidth = 75;
+
+        let progressBarVisible = false;
+
+        const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !progressBarVisible ) {
+                progressBar.style.width = `${targetWidth}%`;
+                progressBar.textContent = `${targetWidth}/100`;
+                progressBarVisible = true;
+                 }
+         });
+         }, {
+                threshold: 0.1
+        });
+
+         const progressBarContainer = document.querySelector('.step.last .progress-bar-container')
+           observer.observe(progressBarContainer);
+
+            // Randomly assign red or green to KOL circles
+            const kolCircles = document.querySelectorAll('.kol-circle');
+            for (let i = 0; i < kolCircles.length; i++) {
+                if (i % 2 === 0) {
+                    kolCircles[i].classList.add('red');
+                } else {
+                    kolCircles[i].classList.add('green');
+                }
+            }
+
+            // Animation on scroll
+            const sections = document.querySelectorAll('.section');
+
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+        });
+    </script>
+</head>
+<body>
+    <header id="hero" >
+        <div class="container">
+            <div id="hero-content">
+                <h1>trencherAI</h1>
+                <p>CA: tba</p>
+                <div class="hero-buttons">
+                    <a href="#key-features" class="btn">Get Started</a>
+                </div>
+            </div>
+            <div id="trenches-index-hero">
+                <h2>State of the Trenches Index <a href="#state-of-trenches-explained-section">ⓘ</a></h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p class="progress-meta">Current Meta: <span>TBA</span></p>
+            </div>
+        </div>
+    </header>
+
+ <section id="state-of-trenches-explained-section" class="section">
+    <div class="container">
+        <h2 class="section-title">Understanding the Trenches Index</h2>
+        <div id="state-of-trenches-explained">
+            <div class="step">
+                <h3>Real-time Data Synthesis</h3>
+                <p>Our index dynamically gathers data from key market indicators.</p>
+            </div>
+            <div class="step">
+                <h3>Crucial Market Factors</h3>
+                <p>We analyze bonded coin performance, market cap trends, and significant price movements (dumps).</p>
+</div>
+<div class="step">
+<h3>Key Opinion Leader Insights</h3>
+<p>We incorporate insights from influential figures and track fluctuations in the SOL price.</p>
+</div>
+<div class="step">
+<h3>Interpreting the Score</h3>
+<p>A higher score (approaching 100) indicates a robust and optimistic market. A lower score suggests caution due to bearish conditions.</p>
+</div>
+<div class="step">
+<h3>Rapid Market Assessment</h3>
+<p>Use this index for a quick understanding of current market dynamics.</p>
+</div>
+<div class="step last">
+<h3>trencherAI in Action</h3>
+<p>This reflects real-time market data, powering trencherAI.</p>
+<div class="progress-bar-container">
+<div class="progress-bar"></div>
+</div>
+<p class="progress-meta">Current Meta: <span>TBA</span></p>
+</div>
+</div>
+</div>
+
+</section>
+<main class="container">
+<section id="key-features" class="section">
+<h2 class="section-title" id="key-features-title">Key Features</h2>
+<div class="feature">
+<h3>Cutting-Edge AI Intelligence</h3>
+<p class="small-text">Leverage the most advanced AI models to dissect Solana transactions in real-time, providing you with a clear analytical edge.</p>
+</div>
+<div class="feature">
+<h3>Comprehensive Ecosystem Integration</h3>
+<p class="small-text">Our platform effortlessly connects you with the entirety of Solana's ecosystem, creating a synergistic AI-driven experience.</p>
+</div>
+<div class="feature">
+<h3>Seamless Execution</h3>
+<p class="small-text">Experience the pinnacle of efficiency with our deeply integrated Solana platform, ensuring your trades execute flawlessly and rapidly.</p>
+</div>
+<div class="feature">
+<h3>Open Source & Community Driven</h3>
+<p class="small-text">Built on principles of transparency and collaboration, our open-source platform thrives on community contributions.</p>
+</div>
+</section>
+<section id="state-of-trenches" class="section">
+        <h2 class="section-title" id="state-of-trenches-title">State of the Trenches (Updated every 5 minutes)</h2>
+        <div class="trench-item">
+            <h4>Bonded Coins</h4>
+            <p class="small-text"><strong>Currently Tracking:</strong> CoinA, CoinB, CoinC...</p>
+        </div>
+        <div class="trench-item">
+            <h4>Market Cap (MC)</h4>
+            <p class="small-text"><strong>Overall Trend:</strong> Upward</p>
+             <p class="small-text"><strong>Top Gainers:</strong> CoinX (+15%), CoinY (+10%)</p>
+        </div>
+        <div class="trench-item">
+            <h4>Pumps/Dumps</h4>
+             <p class="small-text"><strong>Significant Pumps:</strong> CoinP (+20% in 10min)</p>
+           <p class="small-text"> <strong>Notable Dumps:</strong> CoinD (-12% in 5min)</p>
+        </div>
+        <div class="trench-item">
+            <h4>KOL Tracker</h4>
+             <p class="small-text"><strong>Leading Influencers:</strong> @CryptoWhale, @TechGuru</p>
+        </div>
+        <div class="trench-item">
+            <h4>SOL Price</h4>
+            <p class="small-text"><strong>Real-time Price:</strong> $XX.XX</p>
+             <p class="small-text"><strong>24-Hour Change:</strong> +Y%</p>
+        </div>
+    </section>
+
+     <section class="kols-section">
+        <div class="container">
+            <div class="kols-header">
+                <div>
+                    <h2 class="section-title">KOLs Online</h2>
+                    <p class="kols-description">Tracking key opinion leaders in real-time. Stay informed about the movements and sentiments of leading crypto influencers, which can provide valuable insights into market trends and potential opportunities.</p>
+                </div>
+                <div class="kols-grid">
+                    <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                        <div class="kol-circle red"></div>
+                        <div class="kol-circle green"></div>
+                    </div>
+                </div>
+                <p class="kols-status">There are 15/30 KOLs online</p>
+            </div>
+        </section>
+
+        <section id="about-dai" class="section">
+            <h2 class="section-title">Our Manifesto</h2>
+            <p>We stand firm in our commitment to deliver invaluable intelligence to those navigating the complexities of the crypto market. Our central aim is to elevate your trading journey by providing you with transparent, data-driven insights that empower decisive action. Transparency isn't just a guiding principle—it's the very foundation upon which trencherAI is built. We champion the democratization of knowledge, ensuring every user has unfettered access to the insights needed to confidently chart their course through the cryptocurrency landscape. We strive to empower every trader, from beginner to expert, with the tools they need to thrive in this dynamic arena. We believe that informed decisions are the key to success in crypto. That's why trencherAI provides cutting-edge AI-powered insights and tools that are easy to understand and put into practice. We're building a community where knowledge is shared freely, and everyone has the opportunity to succeed. This is our pledge to you - to be your reliable partner in the world of cryptocurrency.</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                     <button class="social-btn" onclick="window.open('#', '_blank')">
+                        <i class="fab fa-x-twitter"></i>
+                    </button>
+                    <button class="social-btn" onclick="window.open('#', '_blank')">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+                <div class="footer-line"></div>
+                <p>© 2024 trencherAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
